@@ -1,0 +1,12 @@
+.app-page {
+  min-height: 100vh;
+  padding: 1rem;
+  background: #000000;
+}
+
+.app-shell {
+  min-height: calc(100vh - 2rem);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #121212;
+}

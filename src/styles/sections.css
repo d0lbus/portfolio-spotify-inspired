@@ -145,6 +145,19 @@
   border: 1px solid rgba(255, 255, 255, 0.24);
 }
 
+.app-page {
+  min-height: 100vh;
+  padding: 1rem;
+  background: #000000;
+}
+
+.app-shell {
+  min-height: calc(100vh - 2rem);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #121212;
+}
+
 @media (max-width: 900px) {
   .profile-hero {
     padding: 2rem 1.25rem 1.5rem;
