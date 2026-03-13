@@ -39,7 +39,7 @@ import {
   currentlyLearning,
 } from "../data/personal";
 import { songs } from "../data/songs";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Home() {
@@ -52,12 +52,16 @@ function Home() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const orderedSongs = useMemo(() => {
+    return [...songs].sort((a, b) => a.id - b.id);
+  }, []);
+
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  const currentSong = songs[currentSongIndex];
+  const currentSong = orderedSongs[currentSongIndex];
 
   const formatTime = (time: number) => {
     if (!Number.isFinite(time)) return "0:00";
@@ -70,16 +74,18 @@ function Home() {
     const audio = audioRef.current;
     if (!audio || !currentSong) return;
 
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+      return;
+    }
+
     try {
-      if (isPlaying) {
-        audio.pause();
-        setIsPlaying(false);
-      } else {
-        await audio.play();
-        setIsPlaying(true);
-      }
+      await audio.play();
+      setIsPlaying(true);
     } catch (error) {
       console.error("Playback failed:", error);
+      setIsPlaying(false);
     }
   };
 
@@ -95,38 +101,38 @@ function Home() {
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = Number(e.target.value);
     setVolume(newVolume);
-
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
   };
 
-  const handleNext = useCallback(() => {
-    if (!songs.length) return;
+  const handleNext = () => {
+    if (!orderedSongs.length) return;
 
     setCurrentTime(0);
 
-    if (isShuffle && songs.length > 1) {
+    if (isShuffle && orderedSongs.length > 1) {
       let randomIndex = currentSongIndex;
 
       while (randomIndex === currentSongIndex) {
-        randomIndex = Math.floor(Math.random() * songs.length);
+        randomIndex = Math.floor(Math.random() * orderedSongs.length);
       }
 
       setCurrentSongIndex(randomIndex);
+      setIsPlaying(true);
       return;
     }
 
     setCurrentSongIndex((prev) => {
-      if (prev === songs.length - 1) {
-        return isRepeat ? 0 : prev;
+      if (prev >= orderedSongs.length - 1) {
+        return 0;
       }
+
       return prev + 1;
     });
-  }, [currentSongIndex, isShuffle, isRepeat]);
+
+    setIsPlaying(true);
+  };
 
   const handlePrevious = () => {
-    if (!songs.length) return;
+    if (!orderedSongs.length) return;
 
     if (audioRef.current && audioRef.current.currentTime > 3) {
       audioRef.current.currentTime = 0;
@@ -135,24 +141,44 @@ function Home() {
     }
 
     setCurrentTime(0);
-    setCurrentSongIndex((prev) => (prev === 0 ? songs.length - 1 : prev - 1));
+
+    setCurrentSongIndex((prev) => {
+      if (prev <= 0) {
+        return orderedSongs.length - 1;
+      }
+
+      return prev - 1;
+    });
+
+    setIsPlaying(true);
   };
 
   useEffect(() => {
     const audio = audioRef.current;
-
     if (!audio || !currentSong?.audio) return;
 
     audio.src = currentSong.audio;
     audio.load();
+  }, [currentSong]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !currentSong?.audio) return;
 
     if (isPlaying) {
-      audio.play().catch((error) => {
-        console.error("Playback failed:", error);
-        setIsPlaying(false);
-      });
+      audio
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error("Playback failed:", error);
+          setIsPlaying(false);
+        });
+    } else {
+      audio.pause();
     }
-  }, [currentSong, isPlaying]);
+  }, [isPlaying, currentSong]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -167,19 +193,30 @@ function Home() {
     };
 
     const handleEnded = () => {
-      if (isRepeat && currentSongIndex === songs.length - 1 && !isShuffle) {
-        setCurrentTime(0);
-        setCurrentSongIndex(0);
+      if (!orderedSongs.length) return;
+
+      setCurrentTime(0);
+
+      if (isShuffle && orderedSongs.length > 1) {
+        let randomIndex = currentSongIndex;
+
+        while (randomIndex === currentSongIndex) {
+          randomIndex = Math.floor(Math.random() * orderedSongs.length);
+        }
+
+        setCurrentSongIndex(randomIndex);
+        setIsPlaying(true);
         return;
       }
 
-      if (currentSongIndex < songs.length - 1 || isShuffle) {
-        handleNext();
-      } else {
-        setIsPlaying(false);
-        audio.currentTime = 0;
-        setCurrentTime(0);
+      if (currentSongIndex >= orderedSongs.length - 1) {
+        setCurrentSongIndex(0);
+        setIsPlaying(true);
+        return;
       }
+
+      setCurrentSongIndex((prev) => prev + 1);
+      setIsPlaying(true);
     };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -191,12 +228,13 @@ function Home() {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [currentSongIndex, isRepeat, isShuffle, handleNext]);
+  }, [currentSongIndex, isShuffle, orderedSongs.length]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = volume;
   }, [volume]);
 
   return (
@@ -209,6 +247,7 @@ function Home() {
             <button className="icon-button" aria-label="Previous" type="button">
               <ChevronLeft size={18} />
             </button>
+
             <button className="icon-button" aria-label="Next" type="button">
               <ChevronRight size={18} />
             </button>
@@ -235,9 +274,11 @@ function Home() {
             >
               <Bell size={18} />
             </button>
+
             <button className="icon-button" aria-label="Profile" type="button">
               <User size={18} />
             </button>
+
             <div className="topbar__avatar">
               <img src={personalInfo.image} alt={personalInfo.name} />
             </div>
@@ -359,6 +400,7 @@ function Home() {
               >
                 <Settings size={22} />
               </button>
+
               <button
                 className="toolbar-icon-button"
                 aria-label="More"
@@ -373,6 +415,7 @@ function Home() {
                 <div>
                   <h2>Top Services</h2>
                 </div>
+
                 <button className="show-all-button" type="button">
                   Show all
                 </button>
@@ -410,8 +453,8 @@ function Home() {
               <div className="section-heading">
                 <div>
                   <h2>Top Tech Stacks</h2>
-                  <p>Only visible to you</p>
                 </div>
+
                 <button className="show-all-button" type="button">
                   Show all
                 </button>
@@ -422,9 +465,11 @@ function Home() {
                   <article key={stack.title} className="stack-row">
                     <div className="stack-row__main">
                       <span className="stack-row__rank">{index + 1}</span>
+
                       <div className="stack-row__cover">
                         <img src={stack.image} alt={stack.title} />
                       </div>
+
                       <div className="stack-row__meta">
                         <h3>{stack.title}</h3>
                         <p>{stack.subtitle}</p>
@@ -443,6 +488,7 @@ function Home() {
                 <div>
                   <h2>Projects &amp; Work</h2>
                 </div>
+
                 <button className="show-all-button" type="button">
                   Show all
                 </button>
@@ -471,6 +517,7 @@ function Home() {
                   <h2>Experience</h2>
                   <p>Companies and roles</p>
                 </div>
+
                 <button className="show-all-button" type="button">
                   Show all
                 </button>
@@ -498,6 +545,7 @@ function Home() {
                 <div>
                   <h2>Currently Learning</h2>
                 </div>
+
                 <button className="show-all-button" type="button">
                   Show all
                 </button>
@@ -544,7 +592,10 @@ function Home() {
             {!isRightCollapsed && (
               <>
                 <div className="right-sidebar__cover-card">
-                  <img src={personalInfo.coverImage} />
+                  <img
+                    src={personalInfo.coverImage}
+                    alt={currentSong?.title || personalInfo.name}
+                  />
                 </div>
 
                 <div className="right-sidebar__identity">
@@ -552,6 +603,7 @@ function Home() {
                     <h3>{personalInfo.name}</h3>
                     <p>{personalInfo.role}</p>
                   </div>
+
                   <button
                     className="toolbar-icon-button toolbar-icon-button--small"
                     aria-label="Add item"
@@ -564,7 +616,6 @@ function Home() {
                 <div className="info-card">
                   <div className="info-card__header">
                     <h4>Quick Links</h4>
-                    <span>Open all</span>
                   </div>
 
                   <div className="quick-links">
