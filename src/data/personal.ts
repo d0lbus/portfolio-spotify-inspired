@@ -57,6 +57,7 @@ export const sidebarLibrary = [
 
 export const topServices = [
   {
+    slug: "full-stack-development",
     title: "Full-Stack Development",
     subtitle: "Web systems and custom platforms",
     image: "/services/fullstack.jpg",
@@ -117,8 +118,8 @@ export const topTechStacks = [
     image: "/stacks/react-vite.jpg",
   },
   {
-    title: "WordPress + Elementor",
-    subtitle: "Content editing and landing pages",
+    title: "WordPress",
+    subtitle: "Web Configuration - Security, SEO, and Performance",
     project: "System Administration",
     length: "3:34",
     image: "/stacks/wordpress.jpg",
@@ -128,32 +129,32 @@ export const topTechStacks = [
 export const projectsPlaylists = [
   {
     title: "Project LMS",
-    subtitle: "By Jan Dolby Aquino",
+    subtitle: "Employee Training",
     image: "/projects/project-lms.jpg",
   },
   {
     title: "NaviDocs",
-    subtitle: "By Jan Dolby Aquino",
+    subtitle: "Document Management System",
     image: "/projects/navidocs.jpg",
   },
   {
     title: "Happy Savers POS",
-    subtitle: "By Jan Dolby Aquino",
+    subtitle: "Basic POS for Minimart",
     image: "/projects/happy-savers.jpg",
   },
   {
-    title: "Written Content",
-    subtitle: "By Jan Dolby Aquino",
+    title: "Copywriting Content",
+    subtitle: "Blog Posts for Leon! Animations",
     image: "/projects/copywriting.jpg",
   },
   {
     title: "Resort Activity Analysis",
-    subtitle: "By Jan Dolby Aquino",
+    subtitle: "Data-driven Activity Recommendations",
     image: "/projects/resort-analysis.jpg",
   },
   {
-    title: "Data Entry and Management",
-    subtitle: "By Jan Dolby Aquino",
+    title: "Data Entry for Analytics",
+    subtitle: "Top-tier data entry for accurate insights",
     image: "/projects/data-entry.jpg",
   },
 ];

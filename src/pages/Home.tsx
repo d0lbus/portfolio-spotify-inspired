@@ -90,43 +90,29 @@ function Home() {
               isLeftCollapsed ? "left-sidebar--collapsed" : ""
             }`}
           >
-            <div className="left-sidebar__compact-top">
+            <div className="left-sidebar__topbar">
               <button
-                className="compact-icon-button"
+                className="library-toggle-button"
                 aria-label="Toggle left sidebar"
                 onClick={() => setIsLeftCollapsed((prev) => !prev)}
               >
-                {isLeftCollapsed ? (
-                  <ChevronRight size={18} />
-                ) : (
-                  <Library size={18} />
-                )}
+                <Library size={18} />
+                {!isLeftCollapsed && <span> My Library</span>}
               </button>
 
               {!isLeftCollapsed && (
-                <button className="compact-icon-button" aria-label="Add item">
-                  <Plus size={18} />
+                <button
+                  className="sidebar-expand-button"
+                  aria-label="Collapse left sidebar"
+                  onClick={() => setIsLeftCollapsed((prev) => !prev)}
+                >
+                  <ChevronLeft size={18} />
                 </button>
               )}
             </div>
 
             {!isLeftCollapsed && (
               <>
-                <div className="left-sidebar__header">
-                  <div>
-                    <p className="sidebar-title">Your Library</p>
-                  </div>
-
-                  <button
-                    className="pill-button pill-button--soft"
-                    onClick={() => setIsLeftCollapsed((prev) => !prev)}
-                    aria-label="Collapse left sidebar"
-                  >
-                    <ChevronLeft size={16} />
-                    <span>Collapse</span>
-                  </button>
-                </div>
-
                 <div className="left-sidebar__filters">
                   <button className="filter-pill">Playlists</button>
                   <button className="filter-pill">Projects</button>
