@@ -1,0 +1,93 @@
+@media (max-width: 1400px) {
+  .spotify-layout {
+    grid-template-columns: 280px minmax(0, 1fr) 300px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1180px) {
+  .spotify-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  .right-sidebar {
+    display: none;
+  }
+
+  .player-bar {
+    grid-template-columns: 260px minmax(0, 1fr) 220px;
+  }
+}
+
+@media (max-width: 920px) {
+  .topbar {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    height: auto;
+    padding: 12px;
+  }
+
+  .topbar__nav,
+  .topbar__actions {
+    display: none;
+  }
+
+  .spotify-app-shell {
+    grid-template-rows: auto 1fr 92px;
+  }
+
+  .spotify-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .left-sidebar {
+    display: none;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .player-bar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 10px 16px 14px;
+    height: auto;
+  }
+
+  .player-bar__actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .profile-hero {
+    padding: 36px 18px 22px;
+  }
+
+  .profile-hero__content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-hero__image {
+    width: 160px;
+    height: 160px;
+  }
+
+  .profile-hero__name {
+    font-size: clamp(3rem, 14vw, 4.8rem);
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stack-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

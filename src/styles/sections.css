@@ -61,3 +61,152 @@
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.84);
 }
+
+.profile-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 8px;
+}
+
+.content-section {
+  padding: 14px 20px 6px;
+}
+
+.content-section--last {
+  padding-bottom: 28px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  margin: 0 0 4px;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+}
+
+.section-heading p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.show-all-button {
+  color: var(--text-soft);
+  font-weight: 700;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.service-card {
+  min-width: 0;
+}
+
+.service-card__image-wrap {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--bg-panel-soft);
+  box-shadow: var(--shadow-strong);
+}
+
+.service-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.service-card h3 {
+  margin: 14px 0 6px;
+  font-size: 1.08rem;
+}
+
+.service-card p {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.45;
+}
+
+.stack-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack-row {
+  min-width: 0;
+  padding: 10px 8px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px 56px;
+  align-items: center;
+  gap: 16px;
+}
+
+.stack-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.stack-row__main {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stack-row__rank {
+  width: 20px;
+  color: var(--text-soft);
+}
+
+.stack-row__cover {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.stack-row__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stack-row__meta {
+  min-width: 0;
+}
+
+.stack-row__meta h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stack-row__meta p,
+.stack-row__project,
+.stack-row__time {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.stack-row__meta p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stack-row__project,
+.stack-row__time {
+  font-size: 0.92rem;
+}
