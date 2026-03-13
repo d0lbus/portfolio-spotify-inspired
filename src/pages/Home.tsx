@@ -218,8 +218,8 @@ function Home() {
             <section className="content-section">
               <div className="section-heading">
                 <div>
-                  <h2>Projects</h2>
-                  <p>Public Playlists</p>
+                  <h2>Projects & Work</h2>
+                  <p></p>
                 </div>
                 <button className="show-all-button">Show all</button>
               </div>
@@ -271,7 +271,6 @@ function Home() {
               <div className="section-heading">
                 <div>
                   <h2>Currently Learning</h2>
-                  <p>Following</p>
                 </div>
                 <button className="show-all-button">Show all</button>
               </div>

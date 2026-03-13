@@ -12,7 +12,7 @@ export const personalInfo = {
 
 export const sidebarLibrary = [
   {
-    title: "Liked Projects",
+    title: "Projects",
     subtitle: "Portfolio • 12 projects",
     image: "",
     type: "featured",
@@ -96,7 +96,7 @@ export const topTechStacks = [
     image: "/stacks/laravel-react.jpg",
   },
   {
-    title: "MERN Stack",
+    title: "MongoDB + Express + Node + React",
     subtitle: "Document tracking and workflow system",
     project: "NaviDocs",
     length: "4:18",
@@ -105,7 +105,7 @@ export const topTechStacks = [
   {
     title: "Node + Prisma + TypeScript",
     subtitle: "Backend services and controllers",
-    project: "TsekSuite",
+    project: "Applicant Testing System",
     length: "4:45",
     image: "/stacks/node-prisma.jpg",
   },
@@ -119,7 +119,7 @@ export const topTechStacks = [
   {
     title: "WordPress + Elementor",
     subtitle: "Content editing and landing pages",
-    project: "Relstone",
+    project: "System Administration",
     length: "3:34",
     image: "/stacks/wordpress.jpg",
   },
@@ -137,14 +137,14 @@ export const projectsPlaylists = [
     image: "/projects/navidocs.jpg",
   },
   {
-    title: "TsekSuite",
+    title: "Happy Savers POS",
     subtitle: "By Jan Dolby Aquino",
-    image: "/projects/tseksuite.jpg",
+    image: "/projects/happy-savers.jpg",
   },
   {
-    title: "Portfolio Website",
+    title: "Written Content",
     subtitle: "By Jan Dolby Aquino",
-    image: "/projects/portfolio.jpg",
+    image: "/projects/copywriting.jpg",
   },
   {
     title: "Resort Activity Analysis",
@@ -152,16 +152,21 @@ export const projectsPlaylists = [
     image: "/projects/resort-analysis.jpg",
   },
   {
-    title: "Booking Transient System",
+    title: "Data Entry and Management",
     subtitle: "By Jan Dolby Aquino",
-    image: "/projects/transient-booking.jpg",
+    image: "/projects/data-entry.jpg",
   },
 ];
 
 export const experienceCompanies = [
   {
+    title: "FullSuite",
+    subtitle: "Software Engineering Intern",
+    image: "/experience/fullsuite.jpg",
+  },
+  {
     title: "Leon Animations",
-    subtitle: "Virtual Assistant",
+    subtitle: "Virtual Assistant & Copywriter",
     image: "/experience/leon-animations.jpg",
   },
   {
@@ -177,17 +182,12 @@ export const experienceCompanies = [
   {
     title: "Acomphel Esports",
     subtitle: "Head Administrator",
-    image: "/experience/acomphel.jpg",
+    image: "/experience/acomphel-esports.jpg",
   },
   {
-    title: "Relstone",
-    subtitle: "WordPress / Content Support",
-    image: "/experience/relstone.jpg",
-  },
-  {
-    title: "FullSuite",
-    subtitle: "Software Engineering Intern",
-    image: "/experience/fullsuite.jpg",
+    title: "BlackFile - Youtube Manager",
+    subtitle: "Content and Channel Management",
+    image: "/experience/youtube.jpg",
   },
 ];
 
