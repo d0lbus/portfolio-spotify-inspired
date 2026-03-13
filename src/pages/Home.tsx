@@ -37,8 +37,11 @@ import {
   experienceCompanies,
   currentlyLearning,
 } from "../data/personal";
+import { useState } from "react";
 
 function Home() {
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
   return (
     <main className="app-page">
       <div className="spotify-app-shell">
@@ -77,42 +80,75 @@ function Home() {
           </div>
         </header>
 
-        <div className="spotify-layout">
-          <aside className="left-sidebar panel">
+        <div
+          className={`spotify-layout ${
+            isLeftCollapsed ? "spotify-layout--left-collapsed" : ""
+          } ${isRightCollapsed ? "spotify-layout--right-collapsed" : ""}`}
+        >
+          <aside
+            className={`left-sidebar panel ${
+              isLeftCollapsed ? "left-sidebar--collapsed" : ""
+            }`}
+          >
             <div className="left-sidebar__compact-top">
-              <button className="compact-icon-button" aria-label="Library view">
-                <Library size={18} />
+              <button
+                className="compact-icon-button"
+                aria-label="Toggle left sidebar"
+                onClick={() => setIsLeftCollapsed((prev) => !prev)}
+              >
+                {isLeftCollapsed ? (
+                  <ChevronRight size={18} />
+                ) : (
+                  <Library size={18} />
+                )}
               </button>
-              <button className="compact-icon-button" aria-label="Add item">
-                <Plus size={18} />
-              </button>
+
+              {!isLeftCollapsed && (
+                <button className="compact-icon-button" aria-label="Add item">
+                  <Plus size={18} />
+                </button>
+              )}
             </div>
 
-            <div className="left-sidebar__header">
-              <div>
-                <p className="sidebar-title">Your Library</p>
-              </div>
-              <button className="pill-button pill-button--soft">
-                <Plus size={16} />
-                <span>Create</span>
-              </button>
-            </div>
+            {!isLeftCollapsed && (
+              <>
+                <div className="left-sidebar__header">
+                  <div>
+                    <p className="sidebar-title">Your Library</p>
+                  </div>
 
-            <div className="left-sidebar__filters">
-              <button className="filter-pill">Playlists</button>
-              <button className="filter-pill">Projects</button>
-              <button className="filter-pill">Stacks</button>
-              <button className="filter-pill">Certificates</button>
-            </div>
+                  <button
+                    className="pill-button pill-button--soft"
+                    onClick={() => setIsLeftCollapsed((prev) => !prev)}
+                    aria-label="Collapse left sidebar"
+                  >
+                    <ChevronLeft size={16} />
+                    <span>Collapse</span>
+                  </button>
+                </div>
 
-            <div className="left-sidebar__subhead">
-              <Search size={16} />
-              <span>Recents</span>
-            </div>
+                <div className="left-sidebar__filters">
+                  <button className="filter-pill">Playlists</button>
+                  <button className="filter-pill">Projects</button>
+                  <button className="filter-pill">Stacks</button>
+                  <button className="filter-pill">Certificates</button>
+                </div>
+
+                <div className="left-sidebar__subhead">
+                  <Search size={16} />
+                  <span>Recents</span>
+                </div>
+              </>
+            )}
 
             <div className="library-list">
               {sidebarLibrary.map((item) => (
-                <article key={item.title} className="library-item">
+                <article
+                  key={item.title}
+                  className={`library-item ${
+                    isLeftCollapsed ? "library-item--collapsed" : ""
+                  }`}
+                >
                   <div className={`library-item__thumb ${item.variant}`}>
                     {item.type === "featured" ? (
                       <Heart size={18} fill="currentColor" />
@@ -121,14 +157,17 @@ function Home() {
                     )}
                   </div>
 
-                  <div className="library-item__content">
-                    <h3>{item.title}</h3>
-                    <p>{item.subtitle}</p>
-                  </div>
+                  {!isLeftCollapsed && (
+                    <div className="library-item__content">
+                      <h3>{item.title}</h3>
+                      <p>{item.subtitle}</p>
+                    </div>
+                  )}
                 </article>
               ))}
             </div>
           </aside>
+
           <section className="center-panel panel panel--scrollable">
             <div className="profile-hero">
               <div className="profile-hero__content">
@@ -168,6 +207,7 @@ function Home() {
                 </div>
                 <button className="show-all-button">Show all</button>
               </div>
+
               <div className="services-grid">
                 {topServices.map((service) => (
                   <article key={service.title} className="service-card">
@@ -185,7 +225,7 @@ function Home() {
               </div>
             </section>
 
-            <section className="content-section content-section--last">
+            <section className="content-section">
               <div className="section-heading">
                 <div>
                   <h2>Top Tech Stacks</h2>
@@ -218,8 +258,7 @@ function Home() {
             <section className="content-section">
               <div className="section-heading">
                 <div>
-                  <h2>Projects & Work</h2>
-                  <p></p>
+                  <h2>Projects &amp; Work</h2>
                 </div>
                 <button className="show-all-button">Show all</button>
               </div>
@@ -293,90 +332,108 @@ function Home() {
             </section>
           </section>
 
-          <aside className="right-sidebar panel">
+          <aside
+            className={`right-sidebar panel ${
+              isRightCollapsed ? "right-sidebar--collapsed" : ""
+            }`}
+          >
             <div className="right-sidebar__header">
-              <h2>{personalInfo.displayName}</h2>
-            </div>
-            <div className="right-sidebar__cover-card">
-              <img
-                src={personalInfo.coverImage}
-                alt={personalInfo.displayName}
-              />
-            </div>
+              {!isRightCollapsed}
 
-            <div className="right-sidebar__identity">
-              <div>
-                <h3>{personalInfo.name}</h3>
-                <p>{personalInfo.role}</p>
-              </div>
               <button
-                className="toolbar-icon-button toolbar-icon-button--small"
-                aria-label="Add item"
+                className="toolbar-icon-button"
+                onClick={() => setIsRightCollapsed((prev) => !prev)}
+                aria-label="Toggle right sidebar"
               >
-                <Plus size={18} />
+                {isRightCollapsed ? (
+                  <ChevronLeft size={18} />
+                ) : (
+                  <ChevronRight size={18} />
+                )}
               </button>
             </div>
 
-            <div className="info-card">
-              <div className="info-card__header">
-                <h4>Quick Links</h4>
-                <span>Open all</span>
-              </div>
+            {!isRightCollapsed && (
+              <>
+                <div className="right-sidebar__cover-card">
+                  <img src={personalInfo.coverImage} />
+                </div>
 
-              <div className="quick-links">
-                <a href="#projects" className="quick-link-item">
-                  <Briefcase size={16} />
-                  <span>Projects</span>
-                </a>
-                <a href="#skills" className="quick-link-item">
-                  <Code2 size={16} />
-                  <span>Skills</span>
-                </a>
-                <a href="#experience" className="quick-link-item">
-                  <FolderGit2 size={16} />
-                  <span>Experience</span>
-                </a>
-                <a href="#contact" className="quick-link-item">
-                  <Mail size={16} />
-                  <span>Contact</span>
-                </a>
-              </div>
-            </div>
-
-            <div className="info-card">
-              <div className="info-card__header">
-                <h4>Socials</h4>
-                <span>Connect</span>
-              </div>
-
-              <div className="social-list">
-                <a
-                  href={personalInfo.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="social-item"
-                >
-                  <Github size={18} />
+                <div className="right-sidebar__identity">
                   <div>
-                    <strong>GitHub</strong>
-                    <span>See code and repositories</span>
+                    <h3>{personalInfo.name}</h3>
+                    <p>{personalInfo.role}</p>
                   </div>
-                </a>
+                  <button
+                    className="toolbar-icon-button toolbar-icon-button--small"
+                    aria-label="Add item"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
 
-                <a
-                  href={personalInfo.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="social-item"
-                >
-                  <Linkedin size={18} />
-                  <div>
-                    <strong>LinkedIn</strong>
-                    <span>View profile and experience</span>
+                <div className="info-card">
+                  <div className="info-card__header">
+                    <h4>Quick Links</h4>
+                    <span>Open all</span>
                   </div>
-                </a>
-              </div>
-            </div>
+
+                  <div className="quick-links">
+                    <a href="#projects" className="quick-link-item">
+                      <Briefcase size={16} />
+                      <span>Projects</span>
+                    </a>
+                    <a href="#skills" className="quick-link-item">
+                      <Code2 size={16} />
+                      <span>Skills</span>
+                    </a>
+                    <a href="#experience" className="quick-link-item">
+                      <FolderGit2 size={16} />
+                      <span>Experience</span>
+                    </a>
+                    <a href="#contact" className="quick-link-item">
+                      <Mail size={16} />
+                      <span>Contact</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="info-card">
+                  <div className="info-card__header">
+                    <h4>Socials</h4>
+                    <span>Connect</span>
+                  </div>
+
+                  <div className="social-list">
+                    <a
+                      href={personalInfo.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="social-item"
+                    >
+                      <Github size={18} />
+                      <div>
+                        <strong>GitHub</strong>
+                        <span>See code and repositories</span>
+                      </div>
+                    </a>
+
+                    <a
+                      href={personalInfo.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="social-item"
+                    >
+                      <Linkedin size={18} />
+                      <div>
+                        <strong>LinkedIn</strong>
+                        <span>View profile and experience</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </>
+            )}
           </aside>
         </div>
         <footer className="player-bar">

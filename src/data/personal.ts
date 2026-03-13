@@ -1,6 +1,6 @@
 export const personalInfo = {
   name: "Jan Dolby Aquino",
-  displayName: "Hi, I'm Dolby!",
+  displayName: "Jan Dolby Aquino",
   role: "Full-Stack Developer • Administrative Virtual Assistant",
   profileStats: "10+ Projects • 4+ Years Learning • 2+ Years Experience",
   currentFocus: "Building Spotify-Inspired Portfolio",
