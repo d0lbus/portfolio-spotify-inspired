@@ -34,6 +34,7 @@
   width: 208px;
   height: 208px;
   object-fit: cover;
+  object-position: 50% 10%;
   border-radius: 50%;
   box-shadow: var(--shadow-strong);
 }
