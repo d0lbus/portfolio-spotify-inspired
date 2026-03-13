@@ -27,6 +27,7 @@ import {
   Github,
   Linkedin,
   User,
+  Pause,
 } from "lucide-react";
 import {
   personalInfo,
@@ -37,27 +38,184 @@ import {
   experienceCompanies,
   currentlyLearning,
 } from "../data/personal";
-import { useState } from "react";
+import { songs } from "../data/songs";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Home() {
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
   const [isRightCollapsed, setIsRightCollapsed] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isShuffle, setIsShuffle] = useState(false);
+  const [isRepeat, setIsRepeat] = useState(false);
+  const [volume, setVolume] = useState(0.7);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const currentSong = songs[currentSongIndex];
+
+  const formatTime = (time: number) => {
+    if (!Number.isFinite(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const togglePlay = async () => {
+    const audio = audioRef.current;
+    if (!audio || !currentSong) return;
+
+    try {
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        await audio.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Playback failed:", error);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = Number(e.target.value);
+    setCurrentTime(newTime);
+
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = Number(e.target.value);
+    setVolume(newVolume);
+
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  const handleNext = useCallback(() => {
+    if (!songs.length) return;
+
+    setCurrentTime(0);
+
+    if (isShuffle && songs.length > 1) {
+      let randomIndex = currentSongIndex;
+
+      while (randomIndex === currentSongIndex) {
+        randomIndex = Math.floor(Math.random() * songs.length);
+      }
+
+      setCurrentSongIndex(randomIndex);
+      return;
+    }
+
+    setCurrentSongIndex((prev) => {
+      if (prev === songs.length - 1) {
+        return isRepeat ? 0 : prev;
+      }
+      return prev + 1;
+    });
+  }, [currentSongIndex, isShuffle, isRepeat]);
+
+  const handlePrevious = () => {
+    if (!songs.length) return;
+
+    if (audioRef.current && audioRef.current.currentTime > 3) {
+      audioRef.current.currentTime = 0;
+      setCurrentTime(0);
+      return;
+    }
+
+    setCurrentTime(0);
+    setCurrentSongIndex((prev) => (prev === 0 ? songs.length - 1 : prev - 1));
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!audio || !currentSong?.audio) return;
+
+    audio.src = currentSong.audio;
+    audio.load();
+
+    if (isPlaying) {
+      audio.play().catch((error) => {
+        console.error("Playback failed:", error);
+        setIsPlaying(false);
+      });
+    }
+  }, [currentSong, isPlaying]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration || 0);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime || 0);
+    };
+
+    const handleEnded = () => {
+      if (isRepeat && currentSongIndex === songs.length - 1 && !isShuffle) {
+        setCurrentTime(0);
+        setCurrentSongIndex(0);
+        return;
+      }
+
+      if (currentSongIndex < songs.length - 1 || isShuffle) {
+        handleNext();
+      } else {
+        setIsPlaying(false);
+        audio.currentTime = 0;
+        setCurrentTime(0);
+      }
+    };
+
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [currentSongIndex, isRepeat, isShuffle, handleNext]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
   return (
     <main className="app-page">
+      <audio ref={audioRef} preload="metadata" />
+
       <div className="spotify-app-shell">
         <header className="topbar">
           <div className="topbar__nav">
-            <button className="icon-button" aria-label="Previous">
+            <button className="icon-button" aria-label="Previous" type="button">
               <ChevronLeft size={18} />
             </button>
-            <button className="icon-button" aria-label="Next">
+            <button className="icon-button" aria-label="Next" type="button">
               <ChevronRight size={18} />
             </button>
           </div>
 
           <div className="topbar__center">
-            <button className="topbar__home" aria-label="Home">
+            <button className="topbar__home" aria-label="Home" type="button">
               <HomeIcon size={18} />
             </button>
 
@@ -68,11 +226,16 @@ function Home() {
               <Library size={18} />
             </div>
           </div>
+
           <div className="topbar__actions">
-            <button className="icon-button" aria-label="Notifications">
+            <button
+              className="icon-button"
+              aria-label="Notifications"
+              type="button"
+            >
               <Bell size={18} />
             </button>
-            <button className="icon-button" aria-label="Profile">
+            <button className="icon-button" aria-label="Profile" type="button">
               <User size={18} />
             </button>
             <div className="topbar__avatar">
@@ -96,6 +259,7 @@ function Home() {
                 className="library-toggle-button"
                 aria-label="Toggle left sidebar"
                 onClick={() => setIsLeftCollapsed((prev) => !prev)}
+                type="button"
               >
                 <Library size={18} />
                 {!isLeftCollapsed && <span> My Library</span>}
@@ -106,6 +270,7 @@ function Home() {
                   className="sidebar-expand-button"
                   aria-label="Collapse left sidebar"
                   onClick={() => setIsLeftCollapsed((prev) => !prev)}
+                  type="button"
                 >
                   <ChevronLeft size={18} />
                 </button>
@@ -115,10 +280,18 @@ function Home() {
             {!isLeftCollapsed && (
               <>
                 <div className="left-sidebar__filters">
-                  <button className="filter-pill">Playlists</button>
-                  <button className="filter-pill">Projects</button>
-                  <button className="filter-pill">Stacks</button>
-                  <button className="filter-pill">Certificates</button>
+                  <button className="filter-pill" type="button">
+                    Playlists
+                  </button>
+                  <button className="filter-pill" type="button">
+                    Projects
+                  </button>
+                  <button className="filter-pill" type="button">
+                    Stacks
+                  </button>
+                  <button className="filter-pill" type="button">
+                    Certificates
+                  </button>
                 </div>
 
                 <div className="left-sidebar__subhead">
@@ -179,10 +352,18 @@ function Home() {
             </div>
 
             <div className="profile-toolbar">
-              <button className="toolbar-icon-button" aria-label="Settings">
+              <button
+                className="toolbar-icon-button"
+                aria-label="Settings"
+                type="button"
+              >
                 <Settings size={22} />
               </button>
-              <button className="toolbar-icon-button" aria-label="More">
+              <button
+                className="toolbar-icon-button"
+                aria-label="More"
+                type="button"
+              >
                 <MoreHorizontal size={22} />
               </button>
             </div>
@@ -192,7 +373,9 @@ function Home() {
                 <div>
                   <h2>Top Services</h2>
                 </div>
-                <button className="show-all-button">Show all</button>
+                <button className="show-all-button" type="button">
+                  Show all
+                </button>
               </div>
 
               <div className="services-grid">
@@ -210,6 +393,10 @@ function Home() {
                       />
                     </div>
 
+                    <span className="service-card__play" aria-hidden="true">
+                      <Play size={18} fill="currentColor" />
+                    </span>
+
                     <div className="service-card__content">
                       <h3>{service.title}</h3>
                       <p>{service.subtitle}</p>
@@ -225,7 +412,9 @@ function Home() {
                   <h2>Top Tech Stacks</h2>
                   <p>Only visible to you</p>
                 </div>
-                <button className="show-all-button">Show all</button>
+                <button className="show-all-button" type="button">
+                  Show all
+                </button>
               </div>
 
               <div className="stack-table">
@@ -254,7 +443,9 @@ function Home() {
                 <div>
                   <h2>Projects &amp; Work</h2>
                 </div>
-                <button className="show-all-button">Show all</button>
+                <button className="show-all-button" type="button">
+                  Show all
+                </button>
               </div>
 
               <div className="playlist-grid">
@@ -280,7 +471,9 @@ function Home() {
                   <h2>Experience</h2>
                   <p>Companies and roles</p>
                 </div>
-                <button className="show-all-button">Show all</button>
+                <button className="show-all-button" type="button">
+                  Show all
+                </button>
               </div>
 
               <div className="circle-grid">
@@ -305,7 +498,9 @@ function Home() {
                 <div>
                   <h2>Currently Learning</h2>
                 </div>
-                <button className="show-all-button">Show all</button>
+                <button className="show-all-button" type="button">
+                  Show all
+                </button>
               </div>
 
               <div className="circle-grid">
@@ -332,12 +527,11 @@ function Home() {
             }`}
           >
             <div className="right-sidebar__header">
-              {!isRightCollapsed}
-
               <button
                 className="toolbar-icon-button"
                 onClick={() => setIsRightCollapsed((prev) => !prev)}
                 aria-label="Toggle right sidebar"
+                type="button"
               >
                 {isRightCollapsed ? (
                   <ChevronLeft size={18} />
@@ -361,6 +555,7 @@ function Home() {
                   <button
                     className="toolbar-icon-button toolbar-icon-button--small"
                     aria-label="Add item"
+                    type="button"
                   >
                     <Plus size={18} />
                   </button>
@@ -430,71 +625,146 @@ function Home() {
             )}
           </aside>
         </div>
+
         <footer className="player-bar">
           <div className="player-bar__track">
-            <img src={personalInfo.coverImage} alt={personalInfo.name} />
+            <img
+              src={currentSong?.cover || personalInfo.coverImage}
+              alt={currentSong?.title || personalInfo.name}
+            />
+
             <div>
-              <strong>{personalInfo.currentFocus}</strong>
-              <span>{personalInfo.role}</span>
+              <strong>{currentSong?.title || personalInfo.currentFocus}</strong>
+              <span>{currentSong?.artist || personalInfo.role}</span>
             </div>
+
             <button
               className="toolbar-icon-button toolbar-icon-button--small"
-              aria-label="Favorite"
+              aria-label={
+                isFavorite ? "Remove from favorites" : "Add to favorites"
+              }
+              onClick={() => setIsFavorite((prev) => !prev)}
+              type="button"
             >
-              <Heart size={16} />
+              <Heart size={16} fill={isFavorite ? "currentColor" : "none"} />
             </button>
           </div>
 
           <div className="player-bar__center">
             <div className="player-controls">
-              <button className="player-control" aria-label="Shuffle">
+              <button
+                className={`player-control ${isShuffle ? "is-active" : ""}`}
+                aria-label="Shuffle"
+                onClick={() => setIsShuffle((prev) => !prev)}
+                type="button"
+              >
                 <Shuffle size={16} />
               </button>
-              <button className="player-control" aria-label="Previous">
+
+              <button
+                className="player-control"
+                aria-label="Previous"
+                onClick={handlePrevious}
+                type="button"
+              >
                 <SkipBack size={18} fill="currentColor" />
               </button>
+
               <button
                 className="player-control player-control--play"
-                aria-label="Play"
+                aria-label={isPlaying ? "Pause" : "Play"}
+                onClick={togglePlay}
+                type="button"
               >
-                <Play size={18} fill="currentColor" />
+                {isPlaying ? (
+                  <Pause size={18} fill="currentColor" />
+                ) : (
+                  <Play size={18} fill="currentColor" />
+                )}
               </button>
-              <button className="player-control" aria-label="Next">
+
+              <button
+                className="player-control"
+                aria-label="Next"
+                onClick={handleNext}
+                type="button"
+              >
                 <SkipForward size={18} fill="currentColor" />
               </button>
-              <button className="player-control" aria-label="Repeat">
+
+              <button
+                className={`player-control ${isRepeat ? "is-active" : ""}`}
+                aria-label="Repeat"
+                onClick={() => setIsRepeat((prev) => !prev)}
+                type="button"
+              >
                 <Repeat size={16} />
               </button>
             </div>
+
             <div className="player-progress">
-              <span>3:20</span>
-              <div className="player-progress__bar">
-                <span className="player-progress__fill" />
-              </div>
-              <span>5:12</span>
+              <span>{formatTime(currentTime)}</span>
+
+              <input
+                className="player-progress__slider"
+                type="range"
+                min={0}
+                max={duration || 0}
+                step={0.1}
+                value={currentTime}
+                onChange={handleSeek}
+                aria-label="Seek track"
+              />
+
+              <span>{formatTime(duration)}</span>
             </div>
           </div>
 
           <div className="player-bar__actions">
-            <button className="player-control" aria-label="Microphone">
+            <button
+              className="player-control"
+              aria-label="Microphone"
+              type="button"
+            >
               <Mic2 size={16} />
             </button>
-            <button className="player-control" aria-label="Queue">
+
+            <button className="player-control" aria-label="Queue" type="button">
               <ListMusic size={16} />
             </button>
-            <button className="player-control" aria-label="Connect">
+
+            <button
+              className="player-control"
+              aria-label="Connect"
+              type="button"
+            >
               <MonitorPlay size={16} />
             </button>
-            <button className="player-control" aria-label="Link">
+
+            <button className="player-control" aria-label="Link" type="button">
               <LinkIcon size={16} />
             </button>
+
             <div className="volume-wrap">
               <Volume2 size={16} />
-              <div className="volume-bar">
-                <span className="volume-bar__fill" />
-              </div>
+
+              <input
+                className="volume-bar"
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={volume}
+                onChange={handleVolumeChange}
+                aria-label="Volume"
+              />
             </div>
-            <button className="player-control" aria-label="Expand">
+
+            <button
+              className="player-control"
+              aria-label="Expand"
+              type="button"
+            >
               <Maximize2 size={16} />
             </button>
           </div>

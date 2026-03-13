@@ -1,0 +1,42 @@
+export const songs = [
+  {
+    id: 1,
+    title: "Iris",
+    artist: "Goo Goo Dolls",
+    cover: "/covers/iris-cover.png",
+    audio: "/music/Iris - The Goo Goo Dolls.mp3",
+    duration: "4:48",
+  },
+  {
+    id: 2,
+    title: "Flowers",
+    artist: "Goo Goo Dolls",
+    cover: "/covers/iris-cover.png",
+    audio: "/music/Iris - The Goo Goo Dolls.mp3",
+    duration: "4:48",
+  },
+  {
+    id: 3,
+    title: "Iris",
+    artist: "Goo Goo Dolls",
+    cover: "/covers/iris-cover.png",
+    audio: "/music/Iris - The Goo Goo Dolls.mp3",
+    duration: "4:48",
+  },
+  {
+    id: 4,
+    title: "Iris",
+    artist: "Goo Goo Dolls",
+    cover: "/covers/iris-cover.png",
+    audio: "/music/Iris - The Goo Goo Dolls.mp3",
+    duration: "4:48",
+  },
+  {
+    id: 5,
+    title: "Iris",
+    artist: "Goo Goo Dolls",
+    cover: "/covers/iris-cover.png",
+    audio: "/music/Iris - The Goo Goo Dolls.mp3",
+    duration: "4:48",
+  },
+];

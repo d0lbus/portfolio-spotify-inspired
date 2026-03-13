@@ -69,12 +69,13 @@ export const topServices = [
     image: "/services/admin-support.jpg",
   },
   {
+    slug: "research-documentation",
     title: "Research and Documentation",
     subtitle: "Clear, structured, and organized",
     image: "/services/research.jpg",
   },
   {
-    slug: "research",
+    slug: "project-coordination",
     title: "Project Coordination",
     subtitle: "Tracking tasks and follow-through",
     image: "/services/coordination.jpg",
