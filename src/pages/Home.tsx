@@ -38,6 +38,7 @@ import {
   currentlyLearning,
 } from "../data/personal";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
@@ -196,7 +197,11 @@ function Home() {
 
               <div className="services-grid">
                 {topServices.map((service) => (
-                  <article key={service.title} className="service-card">
+                  <Link
+                    key={service.slug}
+                    to={`/services/${service.slug}`}
+                    className="service-card service-card--link"
+                  >
                     <div className="service-card__image-wrap">
                       <img
                         src={service.image}
@@ -204,9 +209,12 @@ function Home() {
                         className="service-card__image"
                       />
                     </div>
-                    <h3>{service.title}</h3>
-                    <p>{service.subtitle}</p>
-                  </article>
+
+                    <div className="service-card__content">
+                      <h3>{service.title}</h3>
+                      <p>{service.subtitle}</p>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </section>

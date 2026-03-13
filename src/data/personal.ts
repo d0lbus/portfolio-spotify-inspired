@@ -63,6 +63,7 @@ export const topServices = [
     image: "/services/fullstack.jpg",
   },
   {
+    slug: "admin-support",
     title: "Administrative Support",
     subtitle: "Reliable day-to-day operations",
     image: "/services/admin-support.jpg",
@@ -73,16 +74,19 @@ export const topServices = [
     image: "/services/research.jpg",
   },
   {
+    slug: "research",
     title: "Project Coordination",
     subtitle: "Tracking tasks and follow-through",
     image: "/services/coordination.jpg",
   },
   {
+    slug: "data-management",
     title: "Data and File Management",
     subtitle: "Accurate records and clean systems",
     image: "/services/data-management.jpg",
   },
   {
+    slug: "copywriting",
     title: "Content and Copy Support",
     subtitle: "Simple and effective writing",
     image: "/services/copywriting.jpg",
