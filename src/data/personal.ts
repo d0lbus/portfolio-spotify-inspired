@@ -12,8 +12,8 @@ export const personalInfo = {
 
 export const sidebarLibrary = [
   {
-    title: "Projects",
-    subtitle: "Portfolio • 12 projects",
+    title: "All Projects & Work",
+    subtitle: "Portfolio",
     image: "",
     type: "featured",
     variant: "featured",
@@ -130,7 +130,6 @@ export const topTechStacks = [
     image: "/stacks/wordpress.jpg",
   },
 ];
-
 export const projectsPlaylists = [
   {
     title: "Project LMS",
@@ -163,7 +162,6 @@ export const projectsPlaylists = [
     image: "/projects/data-entry.jpg",
   },
 ];
-
 export const experienceCompanies = [
   {
     title: "FullSuite",
@@ -196,7 +194,6 @@ export const experienceCompanies = [
     image: "/experience/youtube.jpg",
   },
 ];
-
 export const currentlyLearning = [
   {
     title: "Advanced React Patterns",

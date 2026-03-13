@@ -260,7 +260,7 @@ function Home() {
 
             <div className="topbar__search">
               <Search size={18} />
-              <input type="text" placeholder="What do you want to play?" />
+              <input type="text" placeholder="What do you want to know?" />
               <span className="topbar__search-divider" />
               <Library size={18} />
             </div>
