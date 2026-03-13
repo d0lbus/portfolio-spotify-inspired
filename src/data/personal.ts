@@ -124,3 +124,102 @@ export const topTechStacks = [
     image: "/stacks/wordpress.jpg",
   },
 ];
+
+export const projectsPlaylists = [
+  {
+    title: "Project LMS",
+    subtitle: "By Jan Dolby Aquino",
+    image: "/projects/project-lms.jpg",
+  },
+  {
+    title: "NaviDocs",
+    subtitle: "By Jan Dolby Aquino",
+    image: "/projects/navidocs.jpg",
+  },
+  {
+    title: "TsekSuite",
+    subtitle: "By Jan Dolby Aquino",
+    image: "/projects/tseksuite.jpg",
+  },
+  {
+    title: "Portfolio Website",
+    subtitle: "By Jan Dolby Aquino",
+    image: "/projects/portfolio.jpg",
+  },
+  {
+    title: "Resort Activity Analysis",
+    subtitle: "By Jan Dolby Aquino",
+    image: "/projects/resort-analysis.jpg",
+  },
+  {
+    title: "Booking Transient System",
+    subtitle: "By Jan Dolby Aquino",
+    image: "/projects/transient-booking.jpg",
+  },
+];
+
+export const experienceCompanies = [
+  {
+    title: "Leon Animations",
+    subtitle: "Virtual Assistant",
+    image: "/experience/leon-animations.jpg",
+  },
+  {
+    title: "Lofit Clothing",
+    subtitle: "Founder",
+    image: "/experience/lofit.jpg",
+  },
+  {
+    title: "NERF Esports",
+    subtitle: "Head Administrator",
+    image: "/experience/nerf-esports.jpg",
+  },
+  {
+    title: "Acomphel Esports",
+    subtitle: "Head Administrator",
+    image: "/experience/acomphel.jpg",
+  },
+  {
+    title: "Relstone",
+    subtitle: "WordPress / Content Support",
+    image: "/experience/relstone.jpg",
+  },
+  {
+    title: "FullSuite",
+    subtitle: "Software Engineering Intern",
+    image: "/experience/fullsuite.jpg",
+  },
+];
+
+export const currentlyLearning = [
+  {
+    title: "Advanced React Patterns",
+    subtitle: "Frontend Growth",
+    image: "/learning/react-patterns.jpg",
+  },
+  {
+    title: "Laravel Architecture",
+    subtitle: "Backend Growth",
+    image: "/learning/laravel-architecture.jpg",
+  },
+  {
+    title: "TypeScript Best Practices",
+    subtitle: "Code Quality",
+    image: "/learning/typescript.jpg",
+  },
+  {
+    title: "UI / UX Systems",
+    subtitle: "Design Thinking",
+    image: "/learning/uiux.jpg",
+  },
+  {
+    title: "System Design",
+    subtitle: "Scalable Applications",
+    image: "/learning/system-design.jpg",
+  },
+  {
+    title: "DevOps Foundations",
+    subtitle: "Deployment and Workflow",
+    image: "/learning/devops.jpg",
+  },
+];

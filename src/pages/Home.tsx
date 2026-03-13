@@ -33,6 +33,9 @@ import {
   sidebarLibrary,
   topServices,
   topTechStacks,
+  projectsPlaylists,
+  experienceCompanies,
+  currentlyLearning,
 } from "../data/personal";
 
 function Home() {
@@ -162,7 +165,6 @@ function Home() {
               <div className="section-heading">
                 <div>
                   <h2>Top Services</h2>
-                  <p>Only visible to you</p>
                 </div>
                 <button className="show-all-button">Show all</button>
               </div>
@@ -208,6 +210,84 @@ function Home() {
 
                     <span className="stack-row__project">{stack.project}</span>
                     <span className="stack-row__time">{stack.length}</span>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="content-section">
+              <div className="section-heading">
+                <div>
+                  <h2>Projects</h2>
+                  <p>Public Playlists</p>
+                </div>
+                <button className="show-all-button">Show all</button>
+              </div>
+
+              <div className="playlist-grid">
+                {projectsPlaylists.map((project) => (
+                  <article key={project.title} className="playlist-card">
+                    <div className="playlist-card__image-wrap">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="playlist-card__image"
+                      />
+                    </div>
+                    <h3>{project.title}</h3>
+                    <p>{project.subtitle}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="content-section">
+              <div className="section-heading">
+                <div>
+                  <h2>Experience</h2>
+                  <p>Companies and roles</p>
+                </div>
+                <button className="show-all-button">Show all</button>
+              </div>
+
+              <div className="circle-grid">
+                {experienceCompanies.map((company) => (
+                  <article key={company.title} className="circle-card">
+                    <div className="circle-card__image-wrap">
+                      <img
+                        src={company.image}
+                        alt={company.title}
+                        className="circle-card__image"
+                      />
+                    </div>
+                    <h3>{company.title}</h3>
+                    <p>{company.subtitle}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="content-section content-section--last">
+              <div className="section-heading">
+                <div>
+                  <h2>Currently Learning</h2>
+                  <p>Following</p>
+                </div>
+                <button className="show-all-button">Show all</button>
+              </div>
+
+              <div className="circle-grid">
+                {currentlyLearning.map((item) => (
+                  <article key={item.title} className="circle-card">
+                    <div className="circle-card__image-wrap">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="circle-card__image"
+                      />
+                    </div>
+                    <h3>{item.title}</h3>
+                    <p>{item.subtitle}</p>
                   </article>
                 ))}
               </div>
